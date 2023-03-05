@@ -19,24 +19,27 @@ class ViewController: UIViewController {
     @IBOutlet var duratonLabel: UILabel!
     @IBOutlet var delayLabel: UILabel!
     
-    var animation = AnimationPreset.allCases.randomElement()?.rawValue
-    var curve = AnimationCurve.allCases.randomElement()?.rawValue
-    var force = CGFloat.random(in: 0.1...2.0)
-    var duration = CGFloat.random(in: 0.1...2.0)
-    var delay = CGFloat.random(in: 0.1...2.0)
-    
+    var animation = ""
+    var curve = ""
+    var force: CGFloat = 0
+    var duration: CGFloat = 0
+    var delay: CGFloat = 0
+     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        getNextAnimation()
         updateUI()
     }
 
     @IBAction func startAnimationButton(_ sender: Any) {
-        guard let currentAnimation = AnimationPreset.allCases.randomElement()?.rawValue else { return }
-        guard let currentCurve = AnimationCurve.allCases.randomElement()?.rawValue else { return }
         
-        randomAnimationView.animation = currentAnimation
-        randomAnimationView.curve = currentCurve
+        randomAnimationView.animation = animation
+        randomAnimationView.curve = curve
+        randomAnimationView.force = force
+        randomAnimationView.duration = duration
+        randomAnimationView.delay = delay
+        
         randomAnimationView.animate()
         
         updateUI()
@@ -45,20 +48,23 @@ class ViewController: UIViewController {
     
     func getNextAnimation(){
         
-        animation = AnimationPreset.allCases.randomElement()?.rawValue
-        curve = AnimationCurve.allCases.randomElement()?.rawValue
+        guard let currentAnimation = AnimationPreset.allCases.randomElement()?.rawValue else { return }
+        guard let currentCurve = AnimationCurve.allCases.randomElement()?.rawValue else { return }
+        
+        animation = currentAnimation
+        curve = currentCurve
         
         force = CGFloat.random(in: 0.1...2.0)
         duration = CGFloat.random(in: 0.1...2.0)
-        delay = CGFloat.random(in: 0.1...2.0)
+        delay = CGFloat.random(in: 0.1...1.0)
         
-        startButton.setTitle("Run " + (animation ?? ""), for: .normal)
+        startButton.setTitle("Run " + (animation), for: .normal)
     }
     
     func updateUI(){
         
-        persetLabel.text = "Perset: \(animation ?? "")"
-        curveLabel.text = "Curve: \(curve ?? "")"
+        persetLabel.text = "Perset: \(animation)"
+        curveLabel.text = "Curve: \(curve)"
         forceLebel.text = "Force: \(String(format: "%0.2f",force))"
         duratonLabel.text = "Duration: \(String(format: "%0.2f",duration))"
         delayLabel.text = "Delay: \(String(format: "%0.2f",delay))"
